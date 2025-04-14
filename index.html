@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Clicker Mania!</title>
+  <style>
+    /* Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #e0f7fa;
+      text-align: center;
+      padding: 20px;
+    }
+
+    h1 {
+      color: #00796b;
+      font-size: 2rem;
+      margin-bottom: 20px;
+    }
+
+    .game-container {
+      max-width: 700px;
+      margin: 0 auto;
+      background-color: #ffffff;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .clicker-game {
+      margin-top: 30px;
+    }
+
+    .clicker-game button {
+      background-image: url('https://via.placeholder.com/150x50?text=Click+Me');
+      background-size: cover;
+      border: none;
+      width: 150px;
+      height: 50px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      border-radius: 10px;
+      transition: transform 0.2s;
+    }
+
+    .clicker-game button:hover {
+      transform: scale(1.1);
+    }
+
+    .counter, .upgrades {
+      margin-top: 20px;
+    }
+
+    .counter p {
+      font-size: 1.5rem;
+      color: #00796b;
+    }
+
+    progress {
+      width: 100%;
+      height: 20px;
+      margin-top: 10px;
+    }
+
+    .upgrades button {
+      background-color: #ff9800;
+      color: white;
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 10px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .upgrades button:hover {
+      background-color: #fb8c00;
+    }
+
+    .message {
+      margin-top: 20px;
+      font-size: 1.2rem;
+      color: #e91e63;
+    }
+
+    footer {
+      margin-top: 30px;
+      color: #666;
+      font-size: 0.8rem;
+    }
+
+    /* Add a fun background effect */
+    body {
+      background: linear-gradient(to right, #80deea, #4caf50);
+      animation: gradientMove 10s infinite;
+    }
+
+    @keyframes gradientMove {
+      0% {
+        background: linear-gradient(to right, #80deea, #4caf50);
+      }
+      50% {
+        background: linear-gradient(to right, #ffeb3b, #ff9800);
+      }
+      100% {
+        background: linear-gradient(to right, #80deea, #4caf50);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="game-container">
+    <header>
+      <h1>Clicker Mania!</h1>
+      <p>Click the button and unlock awesome upgrades!</p>
+    </header>
+
+    <div class="clicker-game">
+      <button id="click-button" onclick="addClick()">Click Me!</button>
+      <div class="counter">
+        <p>Clicks: <span id="click-count">0</span></p>
+        <progress id="progress-bar" value="0" max="100"></progress>
+      </div>
+
+      <div class="upgrades">
+        <h2>Upgrades</h2>
+        <button id="upgrade1" onclick="buyUpgrade(1)">Buy Double Clicker (Cost: 10)</button>
+        <button id="upgrade2" onclick="buyUpgrade(2)">Buy Turbo Speed (Cost: 50)</button>
+        <button id="upgrade3" onclick="buyUpgrade(3)">Buy Auto Clicker (Cost: 100)</button>
+      </div>
+
+      <div class="message" id="message"></div>
+    </div>
+
+    <footer>
+      <p>&copy; 2025 Clicker Mania</p>
+    </footer>
+  </div>
+
+  <script>
+    let clickCount = 0;
+    let clickMultiplier = 1;
+    let autoClicker = false;
+    let turboSpeed = 1;
+    let upgrade1Purchased = false;
+    let upgrade2Purchased = false;
+    let upgrade3Purchased = false;
+
+    const clickButton = document.getElementById("click-button");
+    const clickCountDisplay = document.getElementById("click-count");
+    const progressBar = document.getElementById("progress-bar");
+    const messageDisplay = document.getElementById("message");
+
+    function addClick() {
+      clickCount += clickMultiplier;
+      updateDisplay();
+      checkProgress();
+    }
+
+    function buyUpgrade(upgradeType) {
+      if (upgradeType === 1 && clickCount >= 10 && !upgrade1Purchased) {
+        clickMultiplier *= 2;
+        clickCount -= 10;
+        upgrade1Purchased = true;
+        messageDisplay.innerHTML = "You bought the Double Clicker!";
+        updateDisplay();
+      } else if (upgradeType === 2 && clickCount >= 50 && !upgrade2Purchased) {
+        turboSpeed = 2;
+        clickCount -= 50;
+        upgrade2Purchased = true;
+        messageDisplay.innerHTML = "Turbo Speed Activated!";
+        updateDisplay();
+      } else if (upgradeType === 3 && clickCount >= 100 && !upgrade3Purchased) {
+        autoClicker = true;
+        clickCount -= 100;
+        upgrade3Purchased = true;
+        messageDisplay.innerHTML = "Auto Clicker is now active!";
+        updateDisplay();
+      } else {
+        messageDisplay.innerHTML = "Not enough clicks or upgrade already purchased!";
+      }
+    }
+
+    function updateDisplay() {
+      clickCountDisplay.textContent = clickCount;
+      progressBar.value = clickCount % 100; // resets after 100 clicks
+    }
+
+    function checkProgress() {
+      if (clickCount >= 100) {
+        messageDisplay.innerHTML = "Congratulations, you've reached 100 clicks!";
+      }
+    }
+
+    function autoClick() {
+      if (autoClicker) {
+        addClick();
+      }
+    }
+
+    // Automatically click every second if Auto Clicker is active
+    setInterval(autoClick, 1000 / turboSpeed);
+  </script>
+
+</body>
+</html>
